@@ -1,0 +1,63 @@
+erDiagram
+    %% EXISTING_TABLES: USERS
+
+    USERS {
+        int id PK
+        varchar email UK
+        varchar name "nullable"
+        timestamp created_at
+    }
+
+    BORROWERS {
+        int id PK
+        int user_id FK, UK
+        varchar card_number UK
+        varchar phone "nullable"
+        int max_active_loans "default: 5"
+        timestamp created_at
+    }
+
+    GENRES {
+        int id PK
+        varchar name UK
+        text description "nullable"
+    }
+
+    AUTHORS {
+        int id PK
+        varchar first_name
+        varchar last_name
+        text bio "nullable"
+        date birth_date "nullable"
+    }
+
+    BOOKS {
+        int id PK
+        varchar title
+        varchar isbn UK
+        int published_year "nullable"
+        int genre_id FK
+        int total_copies
+        timestamp created_at
+    }
+
+    BOOK_AUTHORS {
+        int book_id PK, FK
+        int author_id PK, FK
+    }
+
+    LOANS {
+        int id PK
+        int borrower_id FK
+        int book_id FK
+        timestamp loaned_at
+        date due_date
+        timestamp returned_at "nullable"
+    }
+
+    USERS ||--o| BORROWERS : "has"
+    GENRES ||--o{ BOOKS : "categorizes"
+    BOOKS ||--o{ BOOK_AUTHORS : "has"
+    AUTHORS ||--o{ BOOK_AUTHORS : "wrote"
+    BORROWERS ||--o{ LOANS : "borrows"
+    BOOKS ||--o{ LOANS : "loaned_in"
